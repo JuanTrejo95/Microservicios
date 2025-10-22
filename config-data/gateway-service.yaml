@@ -29,3 +29,7 @@ spring:
           predicates:
             - Path=/moto{/**}
 
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+

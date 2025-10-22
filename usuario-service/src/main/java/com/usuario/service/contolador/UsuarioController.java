@@ -24,6 +24,11 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioService usuarioService;
 	
+	@GetMapping("/test")
+    public String test() {
+        return "Usuario Service activo y respondiendo";
+    }
+	
 	@GetMapping
 	public ResponseEntity<List<Usuario>> obtenUsuarios(){
 		List<Usuario> usuarios = usuarioService.getAll();
