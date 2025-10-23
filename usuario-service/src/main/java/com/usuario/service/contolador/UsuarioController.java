@@ -81,6 +81,10 @@ public class UsuarioController {
 	@CircuitBreaker(name = "carrosCB", fallbackMethod = "fallBackSaveCarro")
 	@PostMapping("/carros/{usuarioId}")
 	public ResponseEntity<Carro> guardarCarro(@PathVariable int usuarioId, @RequestBody Carro carro){
+		Usuario usuario = usuarioService.getUsuarioById(usuarioId);
+		if(usuario == null) {
+			return ResponseEntity.notFound().build();
+		}
 		Carro nuevoCarro = usuarioService.saveCarro(usuarioId, carro);
 		return ResponseEntity.ok(nuevoCarro); 
 	}
@@ -88,6 +92,10 @@ public class UsuarioController {
 	@CircuitBreaker(name = "motosCB", fallbackMethod = "fallBackSaveMoto")
 	@PostMapping("/motos/{usuarioId}")
 	public ResponseEntity<Moto> guardarMoto(@PathVariable int usuarioId, @RequestBody Moto moto){
+		Usuario usuario = usuarioService.getUsuarioById(usuarioId);
+		if(usuario == null) {
+			return ResponseEntity.notFound().build();
+		}
 		Moto nuevaMoto = usuarioService.saveMoto(usuarioId, moto);
 		return ResponseEntity.ok(nuevaMoto); 
 	}
@@ -103,7 +111,7 @@ public class UsuarioController {
 		return new ResponseEntity("El usuario: " + id + " tiene los autos en el taller", null, HttpStatus.SC_OK);
 	}
 	
-	private ResponseEntity<List<Carro>> fallBackSaveCarro(@PathVariable("usuarioId") int id, @RequestBody Carro carro, RuntimeException excepcion){
+	private ResponseEntity<Carro> fallBackSaveCarro(@PathVariable("usuarioId") int id, @RequestBody Carro carro, RuntimeException excepcion){
 		return new ResponseEntity("El usuario: " + id + " no tiene dinero para comprar carro", null, HttpStatus.SC_OK);
 	}
 	
@@ -111,7 +119,7 @@ public class UsuarioController {
 		return new ResponseEntity("El usuario: " + id + " tiene las motos en el taller", null, HttpStatus.SC_OK);
 	}
 	
-	private ResponseEntity<List<Moto>> fallBackSaveMoto(@PathVariable("usuarioId") int id, @RequestBody Moto moto, RuntimeException excepcion){
+	private ResponseEntity<Moto> fallBackSaveMoto(@PathVariable("usuarioId") int id, @RequestBody Moto moto, RuntimeException excepcion){
 		return new ResponseEntity("El usuario: " + id + " no tiene dinero para comprar moto", null, HttpStatus.SC_OK);
 	}
 	
