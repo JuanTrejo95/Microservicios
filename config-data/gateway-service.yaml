@@ -2,41 +2,44 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: gateway-service
+
   cloud:
     gateway:
       discovery:
         locator:
-          enabled: false
+          enabled: true   # Permite rutas dinamicas con Eureka
+          lower-case-service-id: true
       routes:
+        # === USUARIO SERVICE ===
         - id: usuario-service
           uri: lb://usuario-service
           predicates:
             - Path=/usuario/**
-          filters:
-            - StripPrefix=1
+
+        # === CARRO SERVICE ===
         - id: carro-service
           uri: lb://carro-service
           predicates:
             - Path=/carro/**
-          filters:
-            - StripPrefix=1
+
+        # === MOTO SERVICE ===
         - id: moto-service
           uri: lb://moto-service
           predicates:
             - Path=/moto/**
-          filters:
-            - StripPrefix=1
+
 eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      default-zone: http://localhost:8761/eureka
-    register-with-eureka: true
+      defaultZone: http://localhost:8761/eureka
+
   instance:
-      hostname: localhost
+    hostname: localhost
 
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
-
